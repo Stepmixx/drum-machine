@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=MuseoModerno&display=swap");
+
+#drum-machine {
+  font-family: "MuseoModerno", cursive;
+  font-weight: bold;
+  width: min(350px, 90%);
+  height: 450px;
+  background: #020202;
+  box-shadow: -3px -3px 3px rgba(255, 255, 255, 0.25),
+    3px 3px 3px rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+}
+
+#drum-pad-container {
+  width: 85%;
+  height: 300px;
+  background: #090909;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+#control-panel {
+  width: 85%;
+  height: 40px;
+}
+
+.switches {
+  display: flex;
+  flex-direction: column;
+  height: 50px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#display {
+  width: 100px;
+  height: 50px;
+  background: #eaeaea;
+  border-radius: 5px;
+  box-shadow: inset 4px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+i {
+  font-size: 1rem;
+  color: #fff;
+}
