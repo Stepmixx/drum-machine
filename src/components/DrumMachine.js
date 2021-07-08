@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import DrumPad from "./DrumPad";
 import Switch from "react-switch";
 import "./DrumMachine.css";
 import bank1 from "./bank1";
 import bank2 from "./bank2";
+import { VolumeSlider, Thumb, StyledTrack } from "./VolumeSlider";
 
 const switchTextStyle = {
   height: "100%",
@@ -20,21 +21,82 @@ const DrumMachine = () => {
   const [currentBank, setBank] = useState(bank1);
   const [bankSwitchBool, switchBank] = useState(false);
   const [displayText, setDisplayText] = useState(String.fromCharCode(160));
+  const [sliderColor, setSliderColor] = useState("#E9007E");
+  const [volume, setVolume] = useState(1);
 
   const changeBank = () => {
-    if (isOn) {
-      if (currentBank === bank1) {
-        setBank(bank2);
+    if (currentBank === bank1) {
+      setBank(bank2);
+      if (isOn) {
         setDisplayText("Lofi Beats");
-      } else {
-        setBank(bank1);
-        setDisplayText("Default Beats");
+        setSliderColor("#13B9B9");
       }
-      switchBank(!bankSwitchBool);
+    } else {
+      setBank(bank1);
+      if (isOn) {
+        setDisplayText("Default Beats");
+        setSliderColor("#E9007E");
+      }
     }
+    switchBank(!bankSwitchBool);
   };
 
   const clearDisplay = () => setDisplayText(String.fromCharCode(160));
+
+  const activeColor = (padKey) => {
+    switch (padKey) {
+      case "Q":
+      case "A":
+      case "Z":
+        return "active-yellow";
+      case "W":
+      case "S":
+      case "X":
+        return "active-pink";
+      case "E":
+      case "D":
+      case "C":
+        return "active-blue";
+      default:
+        return null;
+    }
+  };
+
+  const playAudio = useCallback(
+    (padKey, element) => {
+      if (isOn) {
+        const audio = document.getElementById(padKey);
+        audio.volume = volume;
+        audio.currentTime = 0;
+        audio.play();
+        setDisplayText(
+          currentBank
+            .find((obj) => obj.key === padKey)
+            .clipId.replace(/-/g, " ")
+        );
+        element.classList.add(activeColor(padKey));
+        setTimeout(() => {
+          element.classList.remove(activeColor(padKey));
+        }, 200);
+      }
+    },
+    [currentBank, isOn, volume]
+  );
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      const audioKey = e.key.toUpperCase();
+      if (currentBank.find((obj) => obj.key === audioKey)) {
+        const keyPadElement = document.getElementById(
+          currentBank.find((obj) => obj.key === audioKey).clipId
+        );
+        playAudio(audioKey, keyPadElement);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [playAudio, currentBank]);
 
   return (
     <div
@@ -48,21 +110,19 @@ const DrumMachine = () => {
               letter={obj.key}
               link={obj.src}
               audioId={obj.clipId}
-              displayKey={setDisplayText}
               power={isOn}
+              playSound={playAudio}
               key={i}
               tabIndex={i.toString()}
             />
           );
         })}
       </div>
-      <div
-        id="control-panel"
-        className="d-flex justify-content-between align-items-center"
-      >
+      <div id="displayandswitches" className="control-panel">
         <div className="switches">
           <i className="fas fa-power-off"></i>
           <Switch
+            aria-label="power switch"
             onChange={() => {
               powerMachine(!isOn);
               clearDisplay();
@@ -77,6 +137,7 @@ const DrumMachine = () => {
         <div className="switches">
           <i className="fas fa-music"></i>
           <Switch
+            aria-label="bank switch"
             onChange={() => changeBank()}
             checked={bankSwitchBool}
             uncheckedIcon={<div style={switchTextStyle}>1</div>}
@@ -86,6 +147,18 @@ const DrumMachine = () => {
             onColor="#13B9B9"
           />
         </div>
+      </div>
+      <div id="volume-container" className="control-panel">
+        <i id="volume-icon" className="fas fa-volume"></i>
+        <VolumeSlider
+          ariaLabel="volume slider"
+          defaultValue={[100]}
+          renderTrack={(props, state, color = sliderColor) => (
+            <StyledTrack {...props} index={state.index} sldrColor={color} />
+          )}
+          renderThumb={Thumb}
+          onChange={(value) => setVolume(value / 100)}
+        />
       </div>
     </div>
   );

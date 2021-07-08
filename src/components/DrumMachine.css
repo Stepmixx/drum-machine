@@ -4,7 +4,7 @@
   font-family: "MuseoModerno", cursive;
   font-weight: bold;
   width: min(350px, 90%);
-  height: 450px;
+  height: 480px;
   background: #020202;
   box-shadow: -3px -3px 3px rgba(255, 255, 255, 0.25),
     3px 3px 3px rgba(255, 255, 255, 0.25);
@@ -22,9 +22,9 @@
   justify-content: space-evenly;
 }
 
-#control-panel {
+.control-panel {
   width: 85%;
-  height: 40px;
+  height: auto;
 }
 
 .switches {
@@ -47,7 +47,24 @@
   text-align: center;
 }
 
+#displayandswitches {
+  display: flex;
+  justify-content: space-between;
+}
+
 i {
   font-size: 1rem;
   color: #fff;
+}
+
+#volume-container {
+  height: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#volume-icon {
+  font-size: 20px;
+  margin-right: 10px;
 }

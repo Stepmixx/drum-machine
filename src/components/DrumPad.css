@@ -10,13 +10,7 @@
   box-shadow: inset 3px 3px 3px rgba(255, 255, 255, 0.25),
     inset -3px -3px 3px rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  color: rgba(0, 0, 0, 0);
-  transition: color ease-in-out 200ms;
-}
-
-.drum-pad:hover {
-  color: #020202;
-  transition: color ease-in-out 200ms;
+  border: none;
 }
 
 .yellow-keys {
@@ -51,4 +45,10 @@
   box-shadow: inset 3px 3px 3px rgba(255, 255, 255, 0.25),
     inset -3px -3px 3px rgba(0, 0, 0, 0.5), 0 0 3px #fff, 0 0 6px #fff,
     0 0 10px #13b9b9, 0 0 15px #13b9b9, 0 0 20px #13b9b9, 0 0 25px #13b9b9;
+}
+
+@media screen and (max-width: 450px) {
+  .drum-pad {
+    color: rgba(0, 0, 0, 0);
+  }
 }

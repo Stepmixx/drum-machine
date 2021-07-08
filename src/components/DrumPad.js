@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React from "react";
 import "./DrumPad.css";
 
 const keyPadColor = (isOn, key) => {
@@ -24,68 +24,18 @@ const keyPadColor = (isOn, key) => {
   }
 };
 
-const DrumPad = ({ letter, link, audioId, displayKey, power }) => {
-  const [isActive, setIsActive] = useState("");
-  const keyRef = useRef();
-
-  const activatePad = useCallback(() => {
-    if (isActive === "") {
-      switch (letter) {
-        case "Q":
-        case "A":
-        case "Z":
-          setIsActive("active-yellow");
-          break;
-        case "W":
-        case "S":
-        case "X":
-          setIsActive("active-pink");
-          break;
-        case "E":
-        case "D":
-        case "C":
-          setIsActive("active-blue");
-          break;
-        default:
-          return null;
-      }
-    }
-  }, [isActive, setIsActive, letter]);
-
-  const deactivatePad = useCallback(() => setIsActive(""), []);
-
-  const playAudio = useCallback(() => {
-    if (power) {
-      const audioToPlay = keyRef.current;
-      audioToPlay.currentTime = 0;
-      audioToPlay.play();
-      displayKey(audioId.replace(/-/g, " "));
-      activatePad();
-      setTimeout(() => deactivatePad(), 200);
-    }
-  }, [power, audioId, displayKey, activatePad, deactivatePad]);
-
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      const { key } = e;
-      if (key.toUpperCase() === letter) {
-        playAudio();
-      }
-    };
-
-    document.addEventListener("keydown", (e) => handleKeyPress(e));
-    return document.removeEventListener("keydown", (e) => handleKeyPress(e));
-  }, [letter, playAudio]);
-
+const DrumPad = ({ letter, link, audioId, power, playSound }) => {
   return (
-    <div
+    <button
       id={audioId}
-      className={`drum-pad ${keyPadColor(power, letter)} ${isActive}`}
-      onClick={() => playAudio()}
+      className={`drum-pad ${keyPadColor(power, letter)}`}
+      onClick={(e) => {
+        playSound(letter, e.target);
+      }}
     >
       {letter}
-      <audio ref={keyRef} className="clip" id={letter} src={link} />
-    </div>
+      <audio className="clip" id={letter} src={link} />
+    </button>
   );
 };
 
