@@ -8,6 +8,10 @@
   background-position: center;
 }
 
+video {
+  object-fit: cover;
+}
+
 #neon-bg {
   position: fixed;
   min-width: 100%;
