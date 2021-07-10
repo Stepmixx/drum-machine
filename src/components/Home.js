@@ -6,7 +6,7 @@ import BgVideo from "../video/neon-bg.mp4";
 const Home = () => {
   return (
     <div className="home-container d-flex justify-content-center align-items-center">
-      <video autoPlay muted loop id="neon-bg">
+      <video autoPlay muted loop id="neon-bg" poster="../img/neon-off-bg.png">
         <source src={BgVideo} type="video/mp4" />
         Your browser does not support this video file.
       </video>
